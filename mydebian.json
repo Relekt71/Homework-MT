@@ -1,0 +1,35 @@
+{
+    "builders": [
+        {
+            "type": "yandex",
+            "token": "xxxxxxxxx",
+            "folder_id": "b1gi7d9oo4tihh61hkeb",
+            "zone": "ru-central1-a",
+            "image_name": "debian-11-docker-{{timestamp}}",
+            "image_description": "my custom debian with docker",
+            "source_image_family": "debian-11",
+            "subnet_id": "e9bpo7nrjq9s141psr2v",
+            "use_ipv4_nat": true,
+            "disk_type": "network-hdd",
+            "ssh_username": "debian"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sudo rm -f /etc/apt/sources.list.d/*backports*",
+                "sudo rm -f /etc/apt/sources.list.d/*bullseye*",
+                "sudo sed -i '/backports/d' /etc/apt/sources.list",
+                "sudo apt-get update",
+                "sudo apt-get install -y htop tmux",
+                "curl -fsSL https://get.docker.com -o get-docker.sh",
+                "sudo sh get-docker.sh",
+                "sudo usermod -aG docker $USER",
+                "docker --version",
+                "htop --version",
+                "tmux -V"
+            ]
+        }
+    ]
+}
